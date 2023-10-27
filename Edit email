@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Appointment App</title>
+</head>
+<body>
+    <form id="myForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name">
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email">
+        <label for="phone">Phone number:</label>
+        <input type="text" id="phone" name="phone">
+        <input type="button" value="Submit" onclick="addPerson()">
+    </form>
+    <div id="peopleList"></div>
+    <script>
+        var people = []; // Array to store added people
+        var editIndex = -1; // Index of the person being edited
+
+        function addPerson() {
+            var name = document.getElementById("name").value;
+            var email = document.getElementById("email").value;
+            var phone = document.getElementById("phone").value;
+
+            if (editIndex !== -1) {
+                // Editing an existing person
+                people[editIndex].name = name;
+                people[editIndex].email = email;
+                people[editIndex].phone = phone;
+                editIndex = -1; // Reset the edit index
+            } else {
+                // Create a new person object
+                var person = { name: name, email: email, phone: phone };
+                people.push(person);
+            }
+
+            displayPeople();
+            clearForm();
+        }
+
+        function displayPeople() {
+            var peopleListDiv = document.getElementById("peopleList");
+            peopleListDiv.innerHTML = ''; // Clear the list
+
+            for (var i = 0; i < people.length; i++) {
+                var person = people[i];
+                var personInfo = person.name + ' - ' + person.email + ' - ' + person.phone;
+
+                // Create "Edit" and "Delete" buttons for each person
+                var editButton = '<button type="button" onclick="editPerson(' + i + ')">Edit</button>';
+                var deleteButton = '<button type="button" onclick="deletePerson(' + i + ')">Delete</button>';
+
+                peopleListDiv.innerHTML += '<div>' + personInfo + editButton + deleteButton + '</div>';
+            }
+        }
+
+        function editPerson(index) {
+            if (index >= 0 && index < people.length) {
+                var person = people[index];
+                document.getElementById("name").value = person.name;
+                document.getElementById("email").value = person.email;
+                document.getElementById("phone").value = person.phone;
+                editIndex = index; // Set the edit index
+            }
+        }
+
+        function deletePerson(index) {
+            if (index >= 0 && index < people.length) {
+                people.splice(index, 1);
+                editIndex = -1; // Reset the edit index
+                displayPeople();
+            }
+        }
+
+        function clearForm() {
+            document.getElementById("name").value = '';
+            document.getElementById("email").value = '';
+            document.getElementById("phone").value = '';
+        }
+    </script>
+</body>
+</html>
